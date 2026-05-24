@@ -2,21 +2,17 @@ import pygame
 from settings import *
 from entities.bullet import Bullet
 from entities.bomb import Bomb
+from entities.damagable_entity import DamageableEntity
 
-class Player:
+class Player(DamageableEntity):
     def __init__(self, x, y):
-        self.pos = pygame.Vector2(x, y)
-        self.rect = pygame.Rect(0, 0, PLAYER_SIZE, PLAYER_SIZE)
-        self.health = PLAYER_MAX_HEALTH
+        super().__init__(x, y, PLAYER_SIZE, PLAYER_COLOR, PLAYER_MAX_HEALTH)
         self.shoot_cooldown = 0
         self.bomb_cooldown = 0
         self.bomb_detonation_delay = 180
-        self.sync()
+    
 
-    def sync(self):
-        self.rect.center = self.pos
-
-    def update(self, keys):
+    def update(self, delta: float, keys):
         move = pygame.Vector2(0, 0)
 
         if keys[pygame.K_w]:
@@ -30,7 +26,7 @@ class Player:
 
         if move.length_squared() > 0:
             move = move.normalize() * PLAYER_SPEED
-            self.pos += move
+            self.speed += move
 
         self.sync()
 
@@ -47,7 +43,7 @@ class Player:
         if direction.length_squared() == 0:
             return None
 
-        self.shoot_cooldown = 12
+        self.shoot_cooldown = 20
 
         return Bullet(
             self.rect.centerx,
@@ -66,6 +62,3 @@ class Player:
             self.rect.centery,
             self.bomb_detonation_delay
         )
-
-    def draw(self, screen):
-        pygame.draw.rect(screen, PLAYER_COLOR, self.rect)

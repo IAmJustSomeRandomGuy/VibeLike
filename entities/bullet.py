@@ -1,22 +1,15 @@
 import pygame
 from settings import *
+from entities.entity import Entity
 
 
-class Bullet:
+class Bullet(Entity):
     def __init__(self, x, y, direction):
-        self.pos = pygame.Vector2(x, y)
+        super().__init__(x, y, BULLET_SIZE, BULLET_COLOR)
         self.direction = pygame.Vector2(direction).normalize()
-        self.rect = pygame.Rect(0, 0, BULLET_SIZE, BULLET_SIZE)
         self.life = 35
-        self.sync()
+        self.knockback = 250
 
-    def sync(self):
-        self.rect.center = (round(self.pos.x), round(self.pos.y))
-
-    def update(self):
+    def update(self, delta):
         self.pos += self.direction * BULLET_SPEED
         self.life -= 1
-        self.sync()
-
-    def draw(self, screen):
-        pygame.draw.rect(screen, BULLET_COLOR, self.rect)

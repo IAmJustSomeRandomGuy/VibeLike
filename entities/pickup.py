@@ -1,10 +1,8 @@
 import pygame
 from settings import *
+from entities.entity import Entity
 
 
-class HeartPickup:
+class HeartPickup(Entity):
     def __init__(self, x, y):
-        self.rect = pygame.Rect(x, y, 22, 22)
-
-    def draw(self, screen):
-        pygame.draw.rect(screen, HEART_COLOR, self.rect)
+        super().__init__(x, y, 22, HEART_COLOR)

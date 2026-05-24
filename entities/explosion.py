@@ -1,15 +1,14 @@
 import pygame
 from settings import *
+from entities.entity import Entity
 
 
-class Explosion:
+class Explosion(Entity):
     def __init__(self, x, y):
-        self.rect = pygame.Rect(0, 0, 222, 222)
-        self.rect.center = (round(x), round(y))
+        super().__init__(x, y, 222, EXPLOSION_COLOR)
         self.life = 30
 
-    def draw(self, screen):
-        pygame.draw.rect(screen, EXPLOSION_COLOR, self.rect)
 
-    def update(self):
+
+    def update(self, delta):
         self.life -= 1

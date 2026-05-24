@@ -1,16 +1,15 @@
 import pygame
 from settings import *
 from entities.explosion import Explosion
+from entities.entity import Entity
 
-class Bomb:
+class Bomb(Entity):
     def __init__(self, x, y, detonation_delay):
+        super().__init__(x, y, 26, BOMB_COLOR)
         self.detonation_delay = detonation_delay
-        self.rect = pygame.Rect(x, y, 26, 26)
-
-    def draw(self, screen):
-        pygame.draw.rect(screen, BOMB_COLOR, self.rect)
+        self.knockback = 750
     
-    def update(self):
+    def update(self, delta):
         self.detonation_delay -= 1
 
     def explode(self):

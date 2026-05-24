@@ -22,10 +22,11 @@ class Game:
     def room(self):
         return self.dungeon.rooms[(self.room_x, self.room_y)]
 
-    def update(self):
+    def update(self, delta: float):
+
         keys = pygame.key.get_pressed()
 
-        self.player.update(keys)
+        self.player._physics_update(delta, keys)
 
         direction = pygame.Vector2(0, 0)
 
@@ -43,17 +44,17 @@ class Game:
         if keys[pygame.K_e]:
             bomb = self.player.drop_bomb()
             if bomb:
-              self.bombs.append(bomb)
+                self.bombs.append(bomb)
 
         if bullet:
             self.bullets.append(bullet)
 
         for enemy in self.room.enemies:
-            enemy.update(self.player)
+            enemy._physics_update(delta, self.player)
 
-        handle_bullets(self.bullets, self.room.enemies)
-        self.explosions += handle_bombs(self.bombs, self.room.enemies)
-        handle_explosions(self.explosions)
+        handle_bullets(delta, self.bullets, self.room.enemies)
+        self.explosions += handle_bombs(delta, self.bombs, self.room.enemies, self.player)
+        handle_explosions(delta, self.explosions)
 
         self.room.update()
 

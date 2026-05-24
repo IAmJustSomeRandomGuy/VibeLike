@@ -112,7 +112,7 @@ def main():
     running = True
 
     while running:
-        clock.tick(FPS)
+        delta = clock.tick(FPS)/1000
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -127,31 +127,19 @@ def main():
                         game = Game()
 
         if game.player.health > 0:
-            game.update()
+            game.update(delta)
             handle_room_transition(game)
 
             # Enemy collision damage
             for enemy in game.room.enemies:
                 if enemy.rect.colliderect(game.player.rect):
-                    game.player.health -= 1
-
-                    # Knockback
-                    direction = game.player.pos - enemy.pos
-
-                    if direction.length_squared() > 0:
-                        direction = direction.normalize()
-                        game.player.pos += direction * 40
-                        game.player.sync()
-
+                    game.player.take_damage(1, enemy.pos, 350)
                     break
 
             # Pickup collection
             for pickup in game.room.pickups[:]:
                 if pickup.rect.colliderect(game.player.rect):
-                    game.player.health = min(
-                        PLAYER_MAX_HEALTH,
-                        game.player.health + 1
-                    )
+                    game.player.heal(1)
 
                     game.room.pickups.remove(pickup)
 
