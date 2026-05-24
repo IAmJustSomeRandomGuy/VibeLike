@@ -7,7 +7,7 @@ class Bullet:
         self.pos = pygame.Vector2(x, y)
         self.direction = pygame.Vector2(direction).normalize()
         self.rect = pygame.Rect(0, 0, BULLET_SIZE, BULLET_SIZE)
-        self.life = 90
+        self.life = 35
         self.sync()
 
     def sync(self):

@@ -2,7 +2,7 @@ import pygame
 
 from settings import *
 from entities.player import Player
-from systems.combat import handle_bullets
+from systems.combat import handle_bullets, handle_bombs, handle_explosions
 from systems.dungeon import Dungeon
 
 
@@ -15,6 +15,8 @@ class Game:
 
         self.player = Player(WIDTH // 2, HEIGHT // 2)
         self.bullets = []
+        self.bombs = []
+        self.explosions = []
 
     @property
     def room(self):
@@ -38,6 +40,11 @@ class Game:
 
         bullet = self.player.shoot(direction)
 
+        if keys[pygame.K_e]:
+            bomb = self.player.drop_bomb()
+            if bomb:
+              self.bombs.append(bomb)
+
         if bullet:
             self.bullets.append(bullet)
 
@@ -45,6 +52,9 @@ class Game:
             enemy.update(self.player)
 
         handle_bullets(self.bullets, self.room.enemies)
+        self.explosions += handle_bombs(self.bombs, self.room.enemies)
+        handle_explosions(self.explosions)
+
         self.room.update()
 
     def draw(self, screen):
@@ -52,6 +62,12 @@ class Game:
 
         for bullet in self.bullets:
             bullet.draw(screen)
+
+        for bomb in self.bombs:
+            bomb.draw(screen)
+
+        for explosion in self.explosions:
+            explosion.draw(screen)
 
         for enemy in self.room.enemies:
             enemy.draw(screen)

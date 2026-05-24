@@ -1,14 +1,16 @@
 import pygame
 from settings import *
 from entities.bullet import Bullet
-
+from entities.bomb import Bomb
 
 class Player:
     def __init__(self, x, y):
         self.pos = pygame.Vector2(x, y)
         self.rect = pygame.Rect(0, 0, PLAYER_SIZE, PLAYER_SIZE)
         self.health = PLAYER_MAX_HEALTH
-        self.cooldown = 0
+        self.shoot_cooldown = 0
+        self.bomb_cooldown = 0
+        self.bomb_detonation_delay = 180
         self.sync()
 
     def sync(self):
@@ -32,22 +34,37 @@ class Player:
 
         self.sync()
 
-        if self.cooldown > 0:
-            self.cooldown -= 1
+        if self.shoot_cooldown > 0:
+            self.shoot_cooldown -= 1
+        
+        if self.bomb_cooldown > 0:
+            self.bomb_cooldown -= 1
 
     def shoot(self, direction):
-        if self.cooldown > 0:
+        if self.shoot_cooldown > 0:
             return None
 
         if direction.length_squared() == 0:
             return None
 
-        self.cooldown = 12
+        self.shoot_cooldown = 12
 
         return Bullet(
             self.rect.centerx,
             self.rect.centery,
             direction
+        )
+    
+    def drop_bomb(self):
+        if self.bomb_cooldown > 0:
+            return None
+
+        self.bomb_cooldown = 90
+
+        return Bomb(
+            self.rect.centerx,
+            self.rect.centery,
+            self.bomb_detonation_delay
         )
 
     def draw(self, screen):
