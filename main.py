@@ -45,7 +45,7 @@ def draw_ui(screen, game):
     screen.blit(enemy_text, (20, 90))
 
     controls = font.render(
-        "WASD Move | Arrow Keys Shoot | ESC Quit",
+        "WASD Move | Arrow Keys Shoot | E to place bomb | ESC Quit",
         True,
         (180, 180, 180)
     )
