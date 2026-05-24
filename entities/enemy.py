@@ -12,4 +12,4 @@ class Enemy(DamageableEntity):
 
         if direction.length_squared() > 0:
             direction = direction.normalize()
-            self.pos += direction * ENEMY_SPEED
+            self.speed += direction * ENEMY_SPEED

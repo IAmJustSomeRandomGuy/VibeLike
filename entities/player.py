@@ -9,7 +9,7 @@ class Player(DamageableEntity):
         super().__init__(x, y, PLAYER_SIZE, PLAYER_COLOR, PLAYER_MAX_HEALTH)
         self.shoot_cooldown = 0
         self.bomb_cooldown = 0
-        self.bomb_detonation_delay = 180
+        self.bomb_detonation_delay = 120
     
 
     def update(self, delta: float, keys):
